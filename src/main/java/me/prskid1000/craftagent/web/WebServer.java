@@ -371,6 +371,8 @@ public class WebServer {
         map.put("llmModel", npc.getConfig().getLlmModel());
         map.put("ollamaUrl", npc.getConfig().getOllamaUrl());
         map.put("lmStudioUrl", npc.getConfig().getLmStudioUrl());
+        map.put("openRouterModel", npc.getConfig().getOpenRouterModel());
+        map.put("openRouterApiUrl", npc.getConfig().getOpenRouterApiUrl());
         return map;
     }
     
@@ -1383,6 +1385,12 @@ public class WebServer {
                     <div class="data-card">
                         <div class="data-card-label">LM Studio URL</div>
                         <div class="data-card-value"><span class="coords">${escapeHtml(npc.lmStudioUrl)}</span></div>
+                    </div>
+                    ` : ''}
+                    ${npc.openRouterModel ? `
+                    <div class="data-card">
+                        <div class="data-card-label">OpenRouter Model</div>
+                        <div class="data-card-value"><span class="coords">${escapeHtml(npc.openRouterModel)}</span></div>
                     </div>
                     ` : ''}
                 `;

@@ -23,6 +23,11 @@ public class NPCConfig implements Configurable {
 	private String lmStudioUrl = "http://localhost:1234/v1";
 	private String skinUrl = "";
 	private boolean skipLLMRequests = false; // If true, skip sending requests to LLM
+	private String openRouterApiKey = "";
+	private String openRouterModel = "deepseek/deepseek-v4-pro";
+	private float openRouterTemperature = 0.7f;
+	private int openRouterMaxTokens = 2048;
+	private String openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
 
 	public NPCConfig() {}
 
@@ -43,7 +48,12 @@ public class NPCConfig implements Configurable {
 		String ollamaUrl,
 		String lmStudioUrl,
 		String skinUrl,
-		boolean skipLLMRequests
+		boolean skipLLMRequests,
+		String openRouterApiKey,
+		String openRouterModel,
+		float openRouterTemperature,
+		int openRouterMaxTokens,
+		String openRouterApiUrl
 	) {
 		this.npcName = npcName;
 		this.uuid = UUID.fromString(uuid);
@@ -58,6 +68,11 @@ public class NPCConfig implements Configurable {
 		this.lmStudioUrl = lmStudioUrl;
 		this.skinUrl = skinUrl;
 		this.skipLLMRequests = skipLLMRequests;
+		this.openRouterApiKey = openRouterApiKey != null ? openRouterApiKey : "";
+		this.openRouterModel = openRouterModel != null ? openRouterModel : "deepseek/deepseek-v4-pro";
+		this.openRouterTemperature = openRouterTemperature;
+		this.openRouterMaxTokens = openRouterMaxTokens;
+		this.openRouterApiUrl = openRouterApiUrl != null ? openRouterApiUrl : "https://openrouter.ai/api/v1/chat/completions";
 	}
 
 	public static class Builder {
@@ -199,6 +214,46 @@ public class NPCConfig implements Configurable {
 		this.skipLLMRequests = skipLLMRequests;
 	}
 
+	public String getOpenRouterApiKey() {
+		return openRouterApiKey;
+	}
+
+	public void setOpenRouterApiKey(String openRouterApiKey) {
+		this.openRouterApiKey = openRouterApiKey != null ? openRouterApiKey : "";
+	}
+
+	public String getOpenRouterModel() {
+		return openRouterModel;
+	}
+
+	public void setOpenRouterModel(String openRouterModel) {
+		this.openRouterModel = openRouterModel != null ? openRouterModel : "deepseek/deepseek-v4-pro";
+	}
+
+	public float getOpenRouterTemperature() {
+		return openRouterTemperature;
+	}
+
+	public void setOpenRouterTemperature(float openRouterTemperature) {
+		this.openRouterTemperature = openRouterTemperature;
+	}
+
+	public int getOpenRouterMaxTokens() {
+		return openRouterMaxTokens;
+	}
+
+	public void setOpenRouterMaxTokens(int openRouterMaxTokens) {
+		this.openRouterMaxTokens = openRouterMaxTokens;
+	}
+
+	public String getOpenRouterApiUrl() {
+		return openRouterApiUrl;
+	}
+
+	public void setOpenRouterApiUrl(String openRouterApiUrl) {
+		this.openRouterApiUrl = openRouterApiUrl != null ? openRouterApiUrl : "https://openrouter.ai/api/v1/chat/completions";
+	}
+
 	@Override
 	public String getConfigName() {
 		return npcName.toLowerCase();
@@ -219,6 +274,11 @@ public class NPCConfig implements Configurable {
 			Endec.STRING.fieldOf("lmStudioUrl", NPCConfig::getLmStudioUrl),
 			Endec.STRING.fieldOf("skinUrl", NPCConfig::getSkinUrl),
 			Endec.BOOLEAN.fieldOf("skipLLMRequests", NPCConfig::isSkipLLMRequests),
+			Endec.STRING.fieldOf("openRouterApiKey", NPCConfig::getOpenRouterApiKey),
+			Endec.STRING.fieldOf("openRouterModel", NPCConfig::getOpenRouterModel),
+			Endec.FLOAT.fieldOf("openRouterTemperature", NPCConfig::getOpenRouterTemperature),
+			Endec.INT.fieldOf("openRouterMaxTokens", NPCConfig::getOpenRouterMaxTokens),
+			Endec.STRING.fieldOf("openRouterApiUrl", NPCConfig::getOpenRouterApiUrl),
 			NPCConfig::new
 	);
 
@@ -236,7 +296,12 @@ public class NPCConfig implements Configurable {
                 config.ollamaUrl,
                 config.lmStudioUrl,
                 config.skinUrl,
-                config.skipLLMRequests
+                config.skipLLMRequests,
+                config.openRouterApiKey,
+                config.openRouterModel,
+                config.openRouterTemperature,
+                config.openRouterMaxTokens,
+                config.openRouterApiUrl
         );
     }
 
@@ -259,5 +324,10 @@ public class NPCConfig implements Configurable {
     public static final String LLM_MODEL = "LLM Model";
 	public static final String OLLAMA_URL = "Ollama URL";
 	public static final String LM_STUDIO_URL = "LM Studio URL";
+	public static final String OPEN_ROUTER_API_KEY = "OpenRouter API Key";
+	public static final String OPEN_ROUTER_MODEL = "OpenRouter Model";
+	public static final String OPEN_ROUTER_TEMPERATURE = "Temperature";
+	public static final String OPEN_ROUTER_MAX_TOKENS = "Max Tokens";
+	public static final String OPEN_ROUTER_API_URL = "API URL";
 	public static final String SKIP_LLM_REQUESTS = "Skip LLM Requests";
 }

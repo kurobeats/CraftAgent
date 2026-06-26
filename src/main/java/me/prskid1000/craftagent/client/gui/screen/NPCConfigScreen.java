@@ -76,6 +76,7 @@ public class NPCConfigScreen extends ConfigScreen<NPCConfig> {
 
         buttonRow.child(llmTypeButton(content, LLMType.OLLAMA));
         buttonRow.child(llmTypeButton(content, LLMType.LM_STUDIO));
+        buttonRow.child(llmTypeButton(content, LLMType.OPEN_ROUTER));
 
         llmTypeRow.child(buttonRow);
     }
@@ -129,6 +130,51 @@ public class NPCConfigScreen extends ConfigScreen<NPCConfig> {
             case LM_STUDIO -> {
                 llmInfo.child(Components.label(Text.of(NPCConfig.LM_STUDIO_URL)).shadow(true));
                 urlInput.text(config.getLmStudioUrl()).onChanged().subscribe(config::setLmStudioUrl);
+            }
+            case OPEN_ROUTER -> {
+                // API Key field
+                llmInfo.child(Components.label(Text.of(NPCConfig.OPEN_ROUTER_API_KEY)).shadow(true));
+                TextAreaComponent apiKeyInput = Components.textArea(Sizing.fill(100), INPUT_H)
+                        .text(config.getOpenRouterApiKey());
+                apiKeyInput.onChanged().subscribe(config::setOpenRouterApiKey);
+                llmInfo.child(apiKeyInput);
+
+                // Model field
+                llmInfo.child(Components.label(Text.of(NPCConfig.OPEN_ROUTER_MODEL)).shadow(true)
+                        .margins(Insets.top(7)));
+                TextAreaComponent modelInput = Components.textArea(Sizing.fill(100), INPUT_H)
+                        .text(config.getOpenRouterModel());
+                modelInput.onChanged().subscribe(config::setOpenRouterModel);
+                llmInfo.child(modelInput);
+
+                // Temperature field
+                llmInfo.child(Components.label(Text.of(NPCConfig.OPEN_ROUTER_TEMPERATURE)).shadow(true)
+                        .margins(Insets.top(7)));
+                TextAreaComponent temperatureInput = Components.textArea(Sizing.fill(100), INPUT_H)
+                        .text(String.valueOf(config.getOpenRouterTemperature()));
+                temperatureInput.onChanged().subscribe(v -> {
+                    if (isEdit) return;
+                    try { config.setOpenRouterTemperature(Float.parseFloat(v)); }
+                    catch (NumberFormatException ignored) {}
+                });
+                llmInfo.child(temperatureInput);
+
+                // Max Tokens field
+                llmInfo.child(Components.label(Text.of(NPCConfig.OPEN_ROUTER_MAX_TOKENS)).shadow(true)
+                        .margins(Insets.top(7)));
+                TextAreaComponent maxTokensInput = Components.textArea(Sizing.fill(100), INPUT_H)
+                        .text(String.valueOf(config.getOpenRouterMaxTokens()));
+                maxTokensInput.onChanged().subscribe(v -> {
+                    if (isEdit) return;
+                    try { config.setOpenRouterMaxTokens(Integer.parseInt(v)); }
+                    catch (NumberFormatException ignored) {}
+                });
+                llmInfo.child(maxTokensInput);
+
+                // API URL field
+                llmInfo.child(Components.label(Text.of(NPCConfig.OPEN_ROUTER_API_URL)).shadow(true)
+                        .margins(Insets.top(7)));
+                urlInput.text(config.getOpenRouterApiUrl()).onChanged().subscribe(config::setOpenRouterApiUrl);
             }
         }
         llmInfo.child(urlInput);

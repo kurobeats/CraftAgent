@@ -390,6 +390,11 @@ class NPCService(
             configToUpdate.ollamaUrl = newConfig.ollamaUrl
             configToUpdate.lmStudioUrl = newConfig.lmStudioUrl
             configToUpdate.skinUrl = newConfig.skinUrl
+            configToUpdate.openRouterApiKey = newConfig.openRouterApiKey
+            configToUpdate.openRouterModel = newConfig.openRouterModel
+            configToUpdate.openRouterTemperature = newConfig.openRouterTemperature
+            configToUpdate.openRouterMaxTokens = newConfig.openRouterMaxTokens
+            configToUpdate.openRouterApiUrl = newConfig.openRouterApiUrl
             // Preserve original UUID
             configToUpdate.uuid = originalUuid
             configProvider.updateNpcConfig(configToUpdate)
@@ -464,6 +469,10 @@ class NPCService(
                 client.updateTimeout(newTimeout)
             }
             is me.prskid1000.craftagent.llm.lmstudio.LMStudioClient -> {
+                // Reinitialize with new timeout
+                client.updateTimeout(newTimeout)
+            }
+            is me.prskid1000.craftagent.llm.openrouter.OpenRouterClient -> {
                 // Reinitialize with new timeout
                 client.updateTimeout(newTimeout)
             }

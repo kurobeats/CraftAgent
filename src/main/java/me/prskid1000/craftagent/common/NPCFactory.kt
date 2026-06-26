@@ -16,6 +16,7 @@ import me.prskid1000.craftagent.llm.LLMClient
 import me.prskid1000.craftagent.llm.LLMType
 import me.prskid1000.craftagent.llm.ollama.OllamaClient
 import me.prskid1000.craftagent.llm.lmstudio.LMStudioClient
+import me.prskid1000.craftagent.llm.openrouter.OpenRouterClient
 import me.prskid1000.craftagent.memory.MemoryManager
 import me.prskid1000.craftagent.model.NPC
 import net.minecraft.server.network.ServerPlayerEntity
@@ -79,6 +80,16 @@ class NPCFactory(
             LLMType.LM_STUDIO -> {
                 LMStudioClient(config.llmModel, config.lmStudioUrl, baseConfig.llmTimeout)
             }
+            LLMType.OPEN_ROUTER -> {
+                OpenRouterClient(
+                    config.openRouterModel,
+                    config.openRouterApiKey,
+                    config.openRouterApiUrl,
+                    config.openRouterTemperature,
+                    config.openRouterMaxTokens,
+                    baseConfig.llmTimeout
+                )
+            }
             else -> throw CraftAgentException.npcCreation("Invalid LLM type: ${config.llmType}")
         }
         // Note: Health check is done in NPCService.createNpc() before spawning to avoid blocking server thread
@@ -97,6 +108,16 @@ class NPCFactory(
             }
             LLMType.LM_STUDIO -> {
                 LMStudioClient(config.llmModel, config.lmStudioUrl, baseConfig.llmTimeout)
+            }
+            LLMType.OPEN_ROUTER -> {
+                OpenRouterClient(
+                    config.openRouterModel,
+                    config.openRouterApiKey,
+                    config.openRouterApiUrl,
+                    config.openRouterTemperature,
+                    config.openRouterMaxTokens,
+                    baseConfig.llmTimeout
+                )
             }
             else -> throw CraftAgentException.npcCreation("Invalid LLM type: ${config.llmType}")
         }
