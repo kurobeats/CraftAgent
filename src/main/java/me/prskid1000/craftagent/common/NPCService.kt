@@ -390,11 +390,7 @@ class NPCService(
             configToUpdate.ollamaUrl = newConfig.ollamaUrl
             configToUpdate.lmStudioUrl = newConfig.lmStudioUrl
             configToUpdate.skinUrl = newConfig.skinUrl
-            configToUpdate.openRouterApiKey = newConfig.openRouterApiKey
-            configToUpdate.openRouterModel = newConfig.openRouterModel
-            configToUpdate.openRouterTemperature = newConfig.openRouterTemperature
-            configToUpdate.openRouterMaxTokens = newConfig.openRouterMaxTokens
-            configToUpdate.openRouterApiUrl = newConfig.openRouterApiUrl
+            configToUpdate.openRouterConfig = newConfig.openRouterConfig
             // Preserve original UUID
             configToUpdate.uuid = originalUuid
             configProvider.updateNpcConfig(configToUpdate)

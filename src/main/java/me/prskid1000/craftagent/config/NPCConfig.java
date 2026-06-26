@@ -23,11 +23,49 @@ public class NPCConfig implements Configurable {
 	private String lmStudioUrl = "http://localhost:1234/v1";
 	private String skinUrl = "";
 	private boolean skipLLMRequests = false; // If true, skip sending requests to LLM
-	private String openRouterApiKey = "";
-	private String openRouterModel = "deepseek/deepseek-v4-pro";
-	private float openRouterTemperature = 0.7f;
-	private int openRouterMaxTokens = 2048;
-	private String openRouterApiUrl = "https://openrouter.ai/api/v1/chat/completions";
+	private OpenRouterConfig openRouterConfig = new OpenRouterConfig();
+
+	/**
+	 * OpenRouter-specific configuration nested object.
+	 * Kept as a sub-object to stay within StructEndecBuilder's 16-field limit.
+	 */
+	public static class OpenRouterConfig {
+		private String apiKey = "";
+		private String model = "deepseek/deepseek-v4-pro";
+		private float temperature = 0.7f;
+		private int maxTokens = 2048;
+		private String apiUrl = "https://openrouter.ai/api/v1/chat/completions";
+
+		public OpenRouterConfig() {}
+
+		public OpenRouterConfig(String apiKey, String model, float temperature, int maxTokens, String apiUrl) {
+			this.apiKey = apiKey != null ? apiKey : "";
+			this.model = model != null ? model : "deepseek/deepseek-v4-pro";
+			this.temperature = temperature;
+			this.maxTokens = maxTokens;
+			this.apiUrl = apiUrl != null ? apiUrl : "https://openrouter.ai/api/v1/chat/completions";
+		}
+
+		public static final StructEndec<OpenRouterConfig> ENDEC = StructEndecBuilder.of(
+				Endec.STRING.fieldOf("apiKey", OpenRouterConfig::getApiKey),
+				Endec.STRING.fieldOf("model", OpenRouterConfig::getModel),
+				Endec.FLOAT.fieldOf("temperature", OpenRouterConfig::getTemperature),
+				Endec.INT.fieldOf("maxTokens", OpenRouterConfig::getMaxTokens),
+				Endec.STRING.fieldOf("apiUrl", OpenRouterConfig::getApiUrl),
+				OpenRouterConfig::new
+		);
+
+		public String getApiKey() { return apiKey; }
+		public void setApiKey(String apiKey) { this.apiKey = apiKey != null ? apiKey : ""; }
+		public String getModel() { return model; }
+		public void setModel(String model) { this.model = model != null ? model : "deepseek/deepseek-v4-pro"; }
+		public float getTemperature() { return temperature; }
+		public void setTemperature(float temperature) { this.temperature = temperature; }
+		public int getMaxTokens() { return maxTokens; }
+		public void setMaxTokens(int maxTokens) { this.maxTokens = maxTokens; }
+		public String getApiUrl() { return apiUrl; }
+		public void setApiUrl(String apiUrl) { this.apiUrl = apiUrl != null ? apiUrl : "https://openrouter.ai/api/v1/chat/completions"; }
+	}
 
 	public NPCConfig() {}
 
@@ -49,11 +87,7 @@ public class NPCConfig implements Configurable {
 		String lmStudioUrl,
 		String skinUrl,
 		boolean skipLLMRequests,
-		String openRouterApiKey,
-		String openRouterModel,
-		float openRouterTemperature,
-		int openRouterMaxTokens,
-		String openRouterApiUrl
+		OpenRouterConfig openRouterConfig
 	) {
 		this.npcName = npcName;
 		this.uuid = UUID.fromString(uuid);
@@ -68,11 +102,7 @@ public class NPCConfig implements Configurable {
 		this.lmStudioUrl = lmStudioUrl;
 		this.skinUrl = skinUrl;
 		this.skipLLMRequests = skipLLMRequests;
-		this.openRouterApiKey = openRouterApiKey != null ? openRouterApiKey : "";
-		this.openRouterModel = openRouterModel != null ? openRouterModel : "deepseek/deepseek-v4-pro";
-		this.openRouterTemperature = openRouterTemperature;
-		this.openRouterMaxTokens = openRouterMaxTokens;
-		this.openRouterApiUrl = openRouterApiUrl != null ? openRouterApiUrl : "https://openrouter.ai/api/v1/chat/completions";
+		this.openRouterConfig = openRouterConfig != null ? openRouterConfig : new OpenRouterConfig();
 	}
 
 	public static class Builder {
@@ -214,45 +244,20 @@ public class NPCConfig implements Configurable {
 		this.skipLLMRequests = skipLLMRequests;
 	}
 
-	public String getOpenRouterApiKey() {
-		return openRouterApiKey;
-	}
+	public OpenRouterConfig getOpenRouterConfig() { return openRouterConfig; }
+	public void setOpenRouterConfig(OpenRouterConfig openRouterConfig) { this.openRouterConfig = openRouterConfig != null ? openRouterConfig : new OpenRouterConfig(); }
 
-	public void setOpenRouterApiKey(String openRouterApiKey) {
-		this.openRouterApiKey = openRouterApiKey != null ? openRouterApiKey : "";
-	}
-
-	public String getOpenRouterModel() {
-		return openRouterModel;
-	}
-
-	public void setOpenRouterModel(String openRouterModel) {
-		this.openRouterModel = openRouterModel != null ? openRouterModel : "deepseek/deepseek-v4-pro";
-	}
-
-	public float getOpenRouterTemperature() {
-		return openRouterTemperature;
-	}
-
-	public void setOpenRouterTemperature(float openRouterTemperature) {
-		this.openRouterTemperature = openRouterTemperature;
-	}
-
-	public int getOpenRouterMaxTokens() {
-		return openRouterMaxTokens;
-	}
-
-	public void setOpenRouterMaxTokens(int openRouterMaxTokens) {
-		this.openRouterMaxTokens = openRouterMaxTokens;
-	}
-
-	public String getOpenRouterApiUrl() {
-		return openRouterApiUrl;
-	}
-
-	public void setOpenRouterApiUrl(String openRouterApiUrl) {
-		this.openRouterApiUrl = openRouterApiUrl != null ? openRouterApiUrl : "https://openrouter.ai/api/v1/chat/completions";
-	}
+	// Convenience delegates for OpenRouter sub-object
+	public String getOpenRouterApiKey() { return openRouterConfig.getApiKey(); }
+	public void setOpenRouterApiKey(String key) { openRouterConfig.setApiKey(key); }
+	public String getOpenRouterModel() { return openRouterConfig.getModel(); }
+	public void setOpenRouterModel(String model) { openRouterConfig.setModel(model); }
+	public float getOpenRouterTemperature() { return openRouterConfig.getTemperature(); }
+	public void setOpenRouterTemperature(float t) { openRouterConfig.setTemperature(t); }
+	public int getOpenRouterMaxTokens() { return openRouterConfig.getMaxTokens(); }
+	public void setOpenRouterMaxTokens(int tokens) { openRouterConfig.setMaxTokens(tokens); }
+	public String getOpenRouterApiUrl() { return openRouterConfig.getApiUrl(); }
+	public void setOpenRouterApiUrl(String url) { openRouterConfig.setApiUrl(url); }
 
 	@Override
 	public String getConfigName() {
@@ -274,11 +279,7 @@ public class NPCConfig implements Configurable {
 			Endec.STRING.fieldOf("lmStudioUrl", NPCConfig::getLmStudioUrl),
 			Endec.STRING.fieldOf("skinUrl", NPCConfig::getSkinUrl),
 			Endec.BOOLEAN.fieldOf("skipLLMRequests", NPCConfig::isSkipLLMRequests),
-			Endec.STRING.fieldOf("openRouterApiKey", NPCConfig::getOpenRouterApiKey),
-			Endec.STRING.fieldOf("openRouterModel", NPCConfig::getOpenRouterModel),
-			Endec.FLOAT.fieldOf("openRouterTemperature", NPCConfig::getOpenRouterTemperature),
-			Endec.INT.fieldOf("openRouterMaxTokens", NPCConfig::getOpenRouterMaxTokens),
-			Endec.STRING.fieldOf("openRouterApiUrl", NPCConfig::getOpenRouterApiUrl),
+			OpenRouterConfig.ENDEC.fieldOf("openrouter", NPCConfig::getOpenRouterConfig),
 			NPCConfig::new
 	);
 
@@ -297,11 +298,13 @@ public class NPCConfig implements Configurable {
                 config.lmStudioUrl,
                 config.skinUrl,
                 config.skipLLMRequests,
-                config.openRouterApiKey,
-                config.openRouterModel,
-                config.openRouterTemperature,
-                config.openRouterMaxTokens,
-                config.openRouterApiUrl
+                new OpenRouterConfig(
+                    config.openRouterConfig.getApiKey(),
+                    config.openRouterConfig.getModel(),
+                    config.openRouterConfig.getTemperature(),
+                    config.openRouterConfig.getMaxTokens(),
+                    config.openRouterConfig.getApiUrl()
+                )
         );
     }
 
